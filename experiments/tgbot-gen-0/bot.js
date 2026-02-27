@@ -78,12 +78,17 @@ bot.command("start", (ctx) => {
 
 bot.command("help", (ctx) => {
   trackUser(ctx);
+  const isGroup = ctx.chat.type === "group" || ctx.chat.type === "supergroup";
   ctx.reply(
     "📖 **How to use SummaryBot:**\n\n" +
     "1. Send me any URL (article, blog, news)\n" +
     "2. I'll fetch and summarize it instantly\n" +
     "3. Save time reading long articles!\n\n" +
-    `Free limit: ${FREE_LIMIT} summaries per day.`,
+    (isGroup
+      ? "🏠 **Group mode:** I auto-summarize any link posted here!\n\n"
+      : "👥 **Tip:** Add me to a group chat — I'll auto-summarize every link!\n\n") +
+    `Free limit: ${FREE_LIMIT} summaries per day.\n\n` +
+    "📢 Like this bot? Share it → https://t.me/aiagentlab\\_bbot",
     { parse_mode: "Markdown" }
   );
 });
@@ -112,9 +117,12 @@ bot.on("message:text", async (ctx) => {
   trackUser(ctx);
   const text = ctx.message.text;
   const match = text.match(urlRegex);
+  const isGroup = ctx.chat.type === "group" || ctx.chat.type === "supergroup";
 
   if (!match) {
-    return ctx.reply("🔗 Send me a URL and I'll summarize it for you!");
+    // In groups, stay silent when no URL; in DMs, prompt user
+    if (isGroup) return;
+    return ctx.reply("🔗 Send me a URL and I'll summarize it for you!\n\n💡 Or add me to a group — I'll auto-summarize links!");
   }
 
   const used = getUsage(ctx.from.id);
@@ -135,7 +143,8 @@ bot.on("message:text", async (ctx) => {
 
   await ctx.reply(
     `📝 **Summary:**\n\n${summary}\n\n` +
-    `📊 ${remaining} summaries remaining today`,
+    `📊 ${remaining} summaries remaining today\n\n` +
+    `💡 Found this useful? Share with a friend → https://t.me/aiagentlab\\_bbot`,
     { parse_mode: "Markdown" }
   );
 });
