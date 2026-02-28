@@ -1,0 +1,18 @@
+{
+  "totalMessages": 7,
+  "totalSummaries": 0,
+  "users": {
+    "6264439652": {
+      "name": "Dao",
+      "username": "adrianjiao",
+      "lastSeen": "2026-02-28T06:02:33.569Z"
+    }
+  },
+  "dailyStats": {
+    "2026-02-28": {
+      "messages": 7,
+      "summaries": 0,
+      "userSummaries": {}
+    }
+  }
+}
